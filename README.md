@@ -130,22 +130,38 @@ We'll use the [**OpenWeather API**](https://openweathermap.org/api).
  - Add the package to `pubspec.yaml`
  - Import it to the file.
 ```dart
-import 'dart:convert'
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;  
+import 'dart:convert' as convert;
 
-void getData() async{  
-  var url ='http://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey';  
-  http.Response response = await http.get(url);  
-  if (response.statusCode == 200) {  
+void getLocation() async {  
+  Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);  
+  latitude = position.latitude;  
+  longitude = position.longitude;  
+  await getData();  
+}  
+  
+Future <void> getData() async{  
+  http.Response response = await http.get('http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=$apiKey');  
+  if(response.statusCode == 200) {  
     String data = response.body;  
-    var decodeData = jsonDecode(data);  
-    print(decodeData);  
-  } else {  
-    print('Request failed with status: ${response.statusCode}.');  
+  
+    var condition = convert.jsonDecode(data)['weather'][0]['id'];  
+    print(condition);  
   }  
+  else{  
+    print(response.statusCode);  
+  }  
+}  
+  
+@override  
+void initState()  {  
+  super.initState();  
+  getLocation();  
 }
 ```
-Call this getData() function in getLocation()
+
+ - Decode the data to print specific in console 
+ - Call this getData() function in getLocation()
 
 **Error:** 
 HTTP connection error [FIX]: https://stackoverflow.com/a/65578828/11690853  
