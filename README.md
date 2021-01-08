@@ -134,7 +134,7 @@ import 'dart:convert'
 import 'package:http/http.dart' as http;
 
 void getData() async{  
-  var url ='api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey';  
+  var url ='http://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey';  
   http.Response response = await http.get(url);  
   if (response.statusCode == 200) {  
     String data = response.body;  
